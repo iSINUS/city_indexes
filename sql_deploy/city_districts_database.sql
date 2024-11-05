@@ -1,0 +1,11 @@
+CREATE DATABASE city_districts
+    WITH
+    OWNER = city_admin
+    ENCODING = 'UTF8'
+    LOCALE_PROVIDER = 'libc'
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+CREATE EXTENSION postgis;
+CREATE EXTENSION h3;
+CREATE EXTENSION h3_postgis CASCADE;

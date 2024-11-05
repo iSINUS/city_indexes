@@ -1,0 +1,101 @@
+#menu__toggle {
+    display: none;
+}
+
+#menu__toggle:checked+.menu__btn>span {
+    transform: rotate(45deg);
+}
+
+#menu__toggle:checked+.menu__btn>span::before {
+    top: 0;
+    transform: rotate(0deg);
+}
+
+#menu__toggle:checked+.menu__btn>span::after {
+    top: 0;
+    transform: rotate(90deg);
+}
+
+#menu__toggle:checked~.menu__box {
+    left: 10px !important;
+}
+
+.menu__btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.menu__btn>span,
+.menu__btn>span::before,
+.menu__btn>span::after {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: black;
+    transition-duration: .25s;
+}
+
+.menu__btn>span::before {
+    content: '';
+    top: -8px;
+}
+
+.menu__btn>span::after {
+    content: '';
+    top: 8px;
+}
+
+.menu__box {
+    display: block;
+    position: fixed;
+    top: 50px;
+    left: -100%;
+    width: 270px;
+    padding: 10px;
+    transition-duration: .25s;
+}
+
+.parameters-text span {
+    font-weight: bold;
+}
+
+.parameters-values input {
+    margin-left: 5px;
+    padding-left: 5px;
+    width: 30px;
+    float: right;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.parameters-values select {
+    width: 100%;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.parameters-sub input {
+    border-width: 1px;
+    border-radius: 4px;
+
+}
+
+.parameters-values p {
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+}
+
+.parameters-help {
+    position: absolute;
+    right: 10px;
+    font-size: large;
+    cursor: pointer;
+    text-decoration: none !important;
+    text-decoration-color: #666;
+}

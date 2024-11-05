@@ -1,0 +1,26 @@
+.noUi-connect {
+    background: transparent;
+}
+
+.noUi-connects {
+    background: linear-gradient(to right,
+            #ff0000,
+            #ff2b00 10%,
+            #ff5500 20%,
+            #ff8000 30%,
+            #ffaa00 40%,
+            #ffd500 50%,
+            #ffff00 60%,
+            #d5ff00 70%,
+            #aaff00 80%,
+            #80ff00 90%,
+            #55ff00 100%);
+}
+
+.noUi-target {
+    margin: 5px 10px 35px 10px;
+}
+
+.noUi-pips-horizontal {
+    height: fit-content;
+}

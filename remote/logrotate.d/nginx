@@ -1,0 +1,17 @@
+/home/city_admin/city_indexes/nginx_logs/*.log {
+  monthly
+  missingok
+  rotate 12
+  dateext
+  compress
+  delaycompress
+  notifempty
+  sharedscripts
+  postrotate
+    cd /home/city_admin/city_indexes/nginx_logs \
+        && aws s3 cp --recursive --exclude "*" --include "*log-*" . s3://city-indexes/nginx_logs/$(ip a | grep "scope global" | grep -Po '(?<=inet )[\d.]+' | head -n1
+)/ \
+        && rm *log-*
+    /usr//bin/docker restart root-nginx-1
+  endscript
+}

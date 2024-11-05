@@ -1,0 +1,297 @@
+[
+	{
+		"name_ru": "Аделаида",
+		"name_en": "Adelaide",
+		"coordinates": [138.5999312, -34.92818049987367]
+	},
+	{
+		"name_ru": "Астана",
+		"name_en": "Astana",
+		"coordinates": [71.4306682, 51.128220499227865]
+	},
+	{
+		"name_ru": "Баку",
+		"name_en": "Baku",
+		"coordinates": [49.8328009, 40.375588500316915]
+	},
+	{
+		"name_ru": "Барановичи",
+		"name_en": "Baranavichy",
+		"coordinates": [26.018415599999997, 53.132292499093026]
+	},
+	{
+		"name_ru": "Батуми",
+		"name_en": "Batumi",
+		"coordinates": [41.636008499999996, 41.65095020045775]
+	},
+	{
+		"name_ru": "Белград",
+		"name_en": "Belgrade",
+		"coordinates": [20.4568974, 44.81781310048462]
+	},
+	{
+		"name_ru": "Бобруйск",
+		"name_en": "Babruysk",
+		"coordinates": [29.228120900000004, 53.14496829909366]
+	},
+	{
+		"name_ru": "Борисов",
+		"name_en": "Barysaw",
+		"coordinates": [28.5117849, 54.22406649922567]
+	},
+	{
+		"name_ru": "Брест",
+		"name_en": "Brest",
+		"coordinates": [23.6851851, 52.09375099910989]
+	},
+	{
+		"name_ru": "Варшава",
+		"name_en": "Warsaw",
+		"coordinates": [21.0067249, 52.23195809910044]
+	},
+	{
+		"name_ru": "Вена",
+		"name_en": "Vienna",
+		"coordinates": [16.3725042, 48.20835369988756]
+	},
+	{
+		"name_ru": "Вильнюс",
+		"name_en": "Vilnius",
+		"coordinates": [25.282911099999996, 54.68704579933195]
+	},
+	{
+		"name_ru": "Витебск",
+		"name_en": "Vitsebsk",
+		"coordinates": [30.2070437, 55.19301969948181]
+	},
+	{
+		"name_ru": "Волгоград",
+		"name_en": "Volgograd",
+		"coordinates": [44.5153353, 48.70819059976469]
+	},
+	{
+		"name_ru": "Вологда",
+		"name_en": "Vologda",
+		"coordinates": [39.89339129999999, 59.21893910135635]
+	},
+	{
+		"name_ru": "Воронеж",
+		"name_en": "Voronezh",
+		"coordinates": [39.2005858, 51.660598199152254]
+	},
+	{
+		"name_ru": "Вроцлав",
+		"name_en": "Wrocław",
+		"coordinates": [17.032668899999997, 51.10897759923102]
+	},
+	{
+		"name_ru": "Гданьск",
+		"name_en": "Gdansk",
+		"coordinates": [18.6540233, 54.348290699251244]
+	},
+	{
+		"name_ru": "Гомель",
+		"name_en": "Homel",
+		"coordinates": [31.013169799999993, 52.42389359909078]
+	},
+	{
+		"name_ru": "Гродно",
+		"name_en": "Hrodna",
+		"coordinates": [23.8342648, 53.683459899139514]
+	},
+	{
+		"name_ru": "Екатеринбург",
+		"name_en": "Yekaterinburg",
+		"coordinates": [60.60825, 56.83910400017747]
+	},
+	{
+		"name_ru": "Ереван",
+		"name_en": "Yerevan",
+		"coordinates": [44.512623299999994, 40.17771120029113]
+	},
+	{
+		"name_ru": "Ижевск",
+		"name_en": "Izhevsk",
+		"coordinates": [53.20941659999999, 56.86655700019112]
+	},
+	{
+		"name_ru": "Казань",
+		"name_en": "Kazan",
+		"coordinates": [49.1242266, 55.78235469969794]
+	},
+	{
+		"name_ru": "Краков",
+		"name_en": "Krakow",
+		"coordinates": [19.9368564, 50.061947399438324]
+	},
+	{
+		"name_ru": "Краснодар",
+		"name_en": "Krasnodar",
+		"coordinates": [38.9772396, 45.03515320046485]
+	},
+	{
+		"name_ru": "Красноярск",
+		"name_en": "Krasnoyarsk",
+		"coordinates": [92.87258599999998, 56.00911729979193]
+	},
+	{
+		"name_ru": "Лида",
+		"name_en": "Lida",
+		"coordinates": [25.295718999999995, 53.89495149916836]
+	},
+	{
+		"name_ru": "Мельбурн",
+		"name_en": "Melbourne",
+		"coordinates": [144.9631732, -37.814245400530915]
+	},
+	{
+		"name_ru": "Минск",
+		"name_en": "Minsk",
+		"coordinates": [27.561822499999998, 53.90247159916951]
+	},
+	{
+		"name_ru": "Могилёв",
+		"name_en": "Mahilyow",
+		"coordinates": [30.3429838, 53.90902449917052]
+	},
+	{
+		"name_ru": "Мозырь",
+		"name_en": "Mazyr",
+		"coordinates": [29.2667179, 52.047548199113514]
+	},
+	{
+		"name_ru": "Молодечно",
+		"name_en": "Maladzyechna",
+		"coordinates": [26.838911099999997, 54.307332699242565]
+	},
+	{
+		"name_ru": "Москва",
+		"name_en": "Moscow",
+		"coordinates": [37.6174782, 55.75054119968521]
+	},
+	{
+		"name_ru": "Нижний Новгород",
+		"name_en": "Nizhny-Novgorod",
+		"coordinates": [44.00513949999999, 56.32648159993235]
+	},
+	{
+		"name_ru": "Ницца",
+		"name_en": "Nice",
+		"coordinates": [7.268391200000001, 43.70093580053997]
+	},
+	{
+		"name_ru": "Нови-Сад",
+		"name_en": "Novi-Sad",
+		"coordinates": [19.845175599999997, 45.255133800441904]
+	},
+	{
+		"name_ru": "Новороссийск",
+		"name_en": "Novorossiysk",
+		"coordinates": [37.7690711, 44.723957800492244]
+	},
+	{
+		"name_ru": "Новосибирск",
+		"name_en": "Novosibirsk",
+		"coordinates": [82.9226887, 55.02883069942942]
+	},
+	{
+		"name_ru": "Омск",
+		"name_en": "Omsk",
+		"coordinates": [73.37152899999998, 54.99137499941795]
+	},
+	{
+		"name_ru": "Орша",
+		"name_en": "Orsha",
+		"coordinates": [30.4254486, 54.51190079928821]
+	},
+	{
+		"name_ru": "Париж",
+		"name_en": "Paris",
+		"coordinates": [2.3483915, 48.85349509972867]
+	},
+	{
+		"name_ru": "Пермь",
+		"name_en": "Perm",
+		"coordinates": [56.246723, 58.01496500078383]
+	},
+	{
+		"name_ru": "Пинск",
+		"name_en": "Pinsk",
+		"coordinates": [26.1025274, 52.111386199108566]
+	},
+	{
+		"name_ru": "Рига",
+		"name_en": "Riga",
+		"coordinates": [24.1051846, 56.94939770023258]
+	},
+	{
+		"name_ru": "Ростов-на-Дону",
+		"name_en": "Rostov-on-Don",
+		"coordinates": [39.709606099999995, 47.221654800114756]
+	},
+	{
+		"name_ru": "Самара",
+		"name_en": "Samara",
+		"coordinates": [50.20393159999999, 53.21946479909767]
+	},
+	{
+		"name_ru": "Санкт-Петербург",
+		"name_en": "Saint-Petersburg",
+		"coordinates": [30.316229000000003, 59.938732001605835]
+	},
+	{
+		"name_ru": "Саратов",
+		"name_en": "Saratov",
+		"coordinates": [46.034683, 51.53001799916855]
+	},
+	{
+		"name_ru": "Сидней",
+		"name_en": "Sydney",
+		"coordinates": [151.20828479999997, -33.86984389966696]
+	},
+	{
+		"name_ru": "Солигорск",
+		"name_en": "Salihorsk",
+		"coordinates": [27.531816799999998, 52.78930389908421]
+	},
+	{
+		"name_ru": "Стамбул",
+		"name_en": "Istanbul",
+		"coordinates": [28.975871500000004, 41.00638100039286]
+	},
+	{
+		"name_ru": "Таллин",
+		"name_en": "Tallinn",
+		"coordinates": [24.745368799999998, 59.43721550144205]
+	},
+	{
+		"name_ru": "Тбилиси",
+		"name_en": "Tbilisi",
+		"coordinates": [44.8014495, 41.69345910046149]
+	},
+	{
+		"name_ru": "Тюмень",
+		"name_en": "Tyumen",
+		"coordinates": [65.542274, 57.1535340003362]
+	},
+	{
+		"name_ru": "Ульяновск",
+		"name_en": "Ulyanovsk",
+		"coordinates": [48.403373, 54.315027799244184]
+	},
+	{
+		"name_ru": "Уфа",
+		"name_en": "Ufa",
+		"coordinates": [55.94749899999999, 54.72614089934227]
+	},
+	{
+		"name_ru": "Челябинск",
+		"name_en": "Chelyabinsk",
+		"coordinates": [61.4025547, 55.15984079947092]
+	},
+	{
+		"name_ru": "Ярославль",
+		"name_en": "Yaroslavl",
+		"coordinates": [39.8933705, 57.62638770058147]
+	}
+]

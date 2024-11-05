@@ -1,0 +1,17 @@
+*.pbf
+*.csv
+.env
+.venv/
+*.log
+*.bin
+
+cache/
+certs/
+nginx_logs/
+postgresql_data/
+valhalla/
+
+TODO.md
+
+local-server/static/
+local-server/logrotate.d/nginx

@@ -1,0 +1,12 @@
+geopandas==1.0.1
+h3==3.7.7
+mercantile==1.2.1
+pandarallel==1.6.5
+pandas==2.2.2
+psycopg2==2.9.9
+pyogrio==0.9.0
+pyproj==3.6.1
+python-dotenv==1.0.1
+requests==2.32.3
+shapely==2.0.6
+ujson==5.10.0

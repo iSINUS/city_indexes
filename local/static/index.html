@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Индекс твоего города</title>
+    <link rel="icon" type="image/x-icon" href="city.indexes">
+    <link rel="shortcut" type="image/x-icon" href="city.indexes">
+    <!-- pragma: allowlist nextline secret -->
+    <meta name="yandex-verification" content="8de400bba47d20c6" />
+    <!-- pragma: allowlist nextline secret -->
+    <meta name="google-site-verification" content="ISha5ezL24swlaaKJ1Gjo6wP2GQ949R2U5TMvT6BS8U" />
+    <meta name="robots" content="nofollow" />
+    <meta name="description" content="Расчет нормализованного индекса для выбранного города и области на карте." />
+    <meta name="keywords"
+        content="качество,индекс качества,город,район,многоквартирная застройка,плотность застройки,доступность детских садов,доступность школ,доступность транспорта,доступность парковок,доступность ресторанов,доступность баров, доступность медицины, доступность спорта, доступность парков, доступность университетов" />
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src='https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.js'></script>
+    <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.css' />
+
+    <script src="https://unpkg.com/@stadiamaps/maplibre-search-box@1.0.1/dist/maplibre-search-box.umd.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@stadiamaps/maplibre-search-box@1.0.1/dist/style.css" />
+
+    <script src="https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css" />
+
+    <script src="script/nouislider.min.js"></script>
+    <link rel="stylesheet" href="css/nouislider.min.css" />
+    <link rel="stylesheet" href="css/nouislider.custom.css" />
+
+    <link rel="stylesheet" href="css/menu.css" />
+
+    <script src="script/city-indexes.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            color: #666;
+        }
+
+        html,
+        body,
+        #map {
+            height: 100%;
+        }
+
+        #legend {
+            position: absolute;
+            bottom: 35px;
+            left: 10px;
+            width: 270px;
+            padding: 10px;
+        }
+
+        #legend-text span {
+            font-weight: bold;
+        }
+
+        .maplibregl-popup-content {
+            min-width: 220px;
+        }
+
+        .maplibregl-popup-content label {
+            font-weight: bold;
+        }
+
+        .maplibregl-popup-content span {
+            float: right;
+        }
+
+        .maplibregl-ctrl-bottom-right {
+            right: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div class="hamburger-menu">
+        <input id="menu__toggle" type="checkbox" checked />
+        <label class="menu__btn" for="menu__toggle">
+            <span></span>
+        </label>
+        <div id="parameters" class="maplibregl-map maplibregl-ctrl-group menu__box">
+            <div class="parameters-text"><span>Расчет индекса</span></div>
+            <div class="parameters-values">
+                <p>
+                    <select id="indexes" onchange="updateIndexes()">
+                        <option value="city_indexes" selected>Для многоквартирных домов</option>
+                        <option value="city_indexes_isochrones">Для многоквартирных домов (изохроны)</option>
+                        <option value="city_indexes_full">Для всего города</option>
+                    </select>
+                </p>
+            </div>
+            <div class="parameters-text"><span>Город (отображение и нормализация)</span></div>
+            <div class="parameters-values">
+                <p>
+                    <select id="city" onchange="updateCity()">
+                    </select>
+                </p>
+            </div>
+            <div class="parameters-text"><span>Выбор типовых комбинаций параметров</span></div>
+            <div class="parameters-values">
+                <p>
+                    <select id="parameters-default" onchange="updateDefaultParameters()">
+                    </select>
+                </p>
+            </div>
+            <div id="parameters-building-outer" style="display:block;">
+                <div class="parameters-text"><span>Выбор параметров для расчета индекса</span></div>
+                <div class="parameters-values">
+                    <p><select id="parameters-building" onclick="updateParameters()">
+                            <option value="*" selected>Все</option>
+                            <option value="apartments">Многоквартирные дома</option>
+                            <option value="dormitory">Общежития</option>
+                            <option value="barracks">Бараки</option>
+                            <option value="unknown">Не определено</option>
+                        </select></p>
+                </div>
+            </div>
+            <div class="parameters-values" id="parameters-index-importance"></div>
+            <div class="parameters-sub">
+                <input type="button" value="Рассчитать" onclick="updateParameters()"
+                    title="Получить общий индекс для параметров и отобразить на какрте.">
+                <a class="parameters-help" href="help.html" target="_blank">?</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="legend" class="maplibregl-map maplibregl-ctrl-group">
+        <div id="legend-text"><span>Индекс для многоквартирных жилых домов</span></div>
+        <div id="slider"></div>
+    </div>
+    <script>
+        // Create map search
+        var search_control = new maplibreSearchBox.MapLibreSearchControl({
+            useMapFocusPoint: true,
+            onResultSelected: setCity,
+        });
+        MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
+        MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
+        MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
+
+        // Create Map
+        const map = new maplibregl.Map({
+            container: 'map',
+            maplibreLogo: true,
+            style: {
+                'version': 8,
+                'sources': {
+                    'osm-tiles': {
+                        'type': 'raster',
+                        'tiles': [
+                            'http://tile.openstreetmap.org/{z}/{x}/{y}.png'
+                        ],
+                        'tileSize': 256,
+                        'attribution':
+                            'Data and map &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>. Layer created by <a href="mailto: lotusnotes@yandex.by">Me</a>'
+                    }
+                },
+                'layers': [
+                    {
+                        'id': 'osm-data',
+                        'type': 'raster',
+                        'source': 'osm-tiles',
+                        'minzoom': 0,
+                        'maxzoom': 19
+                    }
+                ]
+            },
+            center: [27.5924, 53.9361],
+            zoom: 14,
+            antialias: true,
+            attributionControl: { compact: true },
+            hash: true,
+        });
+        // Add map seaarch
+        map.addControl(search_control, "top-right");
+
+        // Add draw polygon control
+        const draw = new MapboxDraw({
+            displayControlsDefault: false,
+            controls: {
+                polygon: true,
+                trash: true
+            }
+        });
+        // Add map controls
+        map.addControl(draw);
+        map.on('draw.create', updateArea);
+        map.on('draw.delete', updateArea);
+        map.on('draw.update', updateArea);
+
+        // Add geolocate control to the map
+        map.addControl(
+            new maplibregl.GeolocateControl({
+                positionOptions: {
+                    enableHighAccuracy: true
+                },
+                trackUserLocation: true
+            })
+        );
+        // Add zoom and rotation controls to the map.
+        map.addControl(new maplibregl.NavigationControl());
+
+        map.on('load', () => {
+            createInputs();
+            updateParameters();
+            setCity(map.getCenter());
+        });
+
+        // Create a popup, but don't add it to the map yet.
+        const popup = new maplibregl.Popup({ closeOnClick: true, maxWidth: '400px' });
+        let touchEvent = 'ontouchend' in window ? 'touchend' : 'click';
+        // When a click event occurs on a feature in the places layer, open a popup
+        map.on(touchEvent, 'city-districts-data', (e) => {
+            const values = map.queryRenderedFeatures(e.point)[0]["properties"];
+            var values_html = `<label>Общий индекс:</label><span><b>${values['city_index']}</b></span><br/>`;
+            parametersList.forEach(parameter => {
+                values_html += `<label>${parameter['label']}:</label><span>${values[parameter['name']]}</span><br/>`;
+            });
+            if (touchEvent !== 'click') {
+                popup.remove();
+            };
+            popup.setLngLat(e.lngLat).setHTML(values_html).addTo(map);
+        });
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'city-districts-data', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'city-districts-data', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        // Create slider
+        noUiSlider.create(slider, {
+            start: [0, 100],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 100
+            },
+            margin: 10,
+            step: 5,
+            pips: {
+                mode: 'count',
+                stepped: true,
+                values: 11,
+                density: 4,
+            }
+        });
+        slider.noUiSlider.on('change', updateValues);
+    </script>
+</body>
+
+</html>
