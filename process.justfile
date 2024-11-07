@@ -48,7 +48,7 @@ fill-cities:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    echo "INSERT INTO cities_tmp (relation_id,city) VALUES" > utils/_get_cities_insert.sql
+    echo "DROP TABLE IF EXISTS cities_tmp;CREATE TABLE cities_tmp (id INTEGER NOT NULL PRIMARY KEY, city VARCHAR(250) NOT NULL);INSERT INTO cities_tmp (id,city) VALUES" > utils/_get_cities_insert.sql
 
     cat utils/cities | while read line || [[ -n $line ]];
     do
@@ -58,15 +58,13 @@ fill-cities:
     done
     sed '$! { P; D; }; s/.$//' utils/_get_cities_insert.sql > utils/get_cities_insert.sql
     rm utils/_get_cities_insert.sql
-    psql $DATABASE_URL -a -q -f utils/get_cities.sql
     psql $DATABASE_URL -a -q -f utils/get_cities_insert.sql
-    psql $DATABASE_URL -a -q -f utils/get_cities_duplicates.sql
-    python utils/get_cities.py
+    psql $DATABASE_URL -a -q -f utils/get_cities.sql
     psql $DATABASE_URL -a -q -f utils/get_cities_centers.sql
     # Required for JavaScript
     psql $DATABASE_URL --command "\\copy public.cities_tmp (cities) TO 'local/static/script/cities.json' DELIMITER ';' ;"
     # List of cities to warmup cache
-    # psql $DATABASE_URL --command "\\copy (SELECT city,relation_id FROM cities ORDER BY 1) TO 'utils/cities_list_cache' DELIMITER ',' HEADER ;"
+    # psql $DATABASE_URL --command "\\copy (SELECT city,id FROM cities ORDER BY 1) TO 'utils/cities_list_cache' DELIMITER ',' HEADER ;"
 
 [group('process')]
 prepare-indexes-functions:

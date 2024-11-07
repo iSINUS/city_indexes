@@ -5,10 +5,9 @@ CREATE TABLE cities_tmp AS (
   FROM
     (
       SELECT
-        tags ->> 'name:ru' AS name_ru,
-        REPLACE(REPLACE(COALESCE(tags ->> 'name:en',tags ->> 'name'),' ','-'),'''','') AS name_en,
-        ARRAY[public.ST_x (public.ST_transform (geom, 4326)), public.ST_y (public.ST_transform (geom, 4326))] AS coordinates
-      FROM points
-      WHERE tags ->> 'place' = 'city'
-      ORDER BY tags ->> 'name:ru'
+        city_ru AS name_ru,
+        city AS name_en,
+        ARRAY[public.ST_x (public.ST_transform (geom_center, 4326)), public.ST_y (public.ST_transform (geom_center, 4326))] AS coordinates
+      FROM cities
+      ORDER BY name_ru
     ) AS t (name_ru, name_en, coordinates));
