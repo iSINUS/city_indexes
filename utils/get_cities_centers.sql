@@ -7,7 +7,7 @@ CREATE TABLE cities_tmp AS (
       SELECT
         city_ru AS name_ru,
         city AS name_en,
-        ARRAY[public.ST_x (public.ST_transform (geom_center, 4326)), public.ST_y (public.ST_transform (geom_center, 4326))] AS coordinates
+        ARRAY[public.ST_x(geom_center), public.ST_y(geom_center)] AS coordinates
       FROM cities
       ORDER BY name_ru
     ) AS t (name_ru, name_en, coordinates));
