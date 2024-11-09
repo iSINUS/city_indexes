@@ -87,7 +87,9 @@ CREATE TABLE living_index_building AS (
 		living_max_min AS (
 			SELECT city,building,zoom,MAX(living_index) AS max_living_index, MIN(living_index) AS min_living_index FROM data_table GROUP BY 1,2,3
 		)
-	SELECT city,building,zoom,h3, CASE WHEN max_living_index>min_living_index THEN CAST(100*(living_index-min_living_index)/(max_living_index-min_living_index) AS smallint) ELSE 100::smallint END AS living_index
+	SELECT
+		city,building,zoom,h3,
+		CASE WHEN max_living_index>min_living_index THEN CAST(100*(living_index-min_living_index)/(max_living_index-min_living_index) AS smallint) ELSE 100::smallint END AS living_index
 	FROM data_table
 	JOIN living_max_min USING(city,building,zoom));
 

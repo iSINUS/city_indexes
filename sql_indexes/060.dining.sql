@@ -55,7 +55,9 @@ CREATE TABLE dining_index AS (
 		dining_max_min AS (
 			SELECT city,zoom,MAX(dining_index) AS max_dining_index, MIN(dining_index) AS min_dining_index FROM data_table GROUP BY 1,2
 		)
-	SELECT city,zoom,h3, CAST(100*(dining_index-min_dining_index)/(max_dining_index-min_dining_index) AS smallint) AS dining_index
+	SELECT
+		city,zoom,h3,
+		CASE WHEN max_dining_index>min_dining_index THEN CAST(100*(dining_index-min_dining_index)/(max_dining_index-min_dining_index) AS smallint) ELSE 100::smallint END AS dining_index
 	FROM data_table
 	JOIN dining_max_min USING(city,zoom));
 
