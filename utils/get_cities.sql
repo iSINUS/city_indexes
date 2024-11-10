@@ -23,7 +23,7 @@ create table cities as (
 				geom as geom_center
 			from points
 			where (tags ->> 'place') in ('city','town'))
-	select city_boundaries.id, city_boundaries.city,city_boundaries.city_ru,public.ST_Transform(city_boundaries.geom,4326) as geom, public.ST_Transform(geom_center,4326) as geom_center
+	select city_boundaries.id, city_boundaries.city,city_boundaries.city_ru,public.ST_BuildArea(public.ST_Transform(city_boundaries.geom,4326)) as geom, public.ST_Transform(geom_center,4326) as geom_center
 	from city_boundaries
 	join cities_center on name_en=city and (public.st_within(geom_center,geom) or public.st_distance(geom_center,geom)<12000));
 
