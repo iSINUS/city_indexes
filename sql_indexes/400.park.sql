@@ -32,7 +32,9 @@ CREATE TABLE park_index_isochrones AS (
 		park_max_min AS (
 			SELECT city,zoom,MAX(park_index) AS max_park_index, MIN(park_index) AS min_park_index FROM data_table GROUP BY 1,2
 		)
-	SELECT city,zoom,h3, CAST(100*(park_index-min_park_index)/(max_park_index-min_park_index) AS smallint) AS park_index
+	SELECT
+		city,zoom,h3,
+		CASE WHEN max_park_index>min_park_index THEN CAST(100*(park_index-min_park_index)/(max_park_index-min_park_index) AS smallint) ELSE 100::smallint END AS park_index
 	FROM data_table
 	JOIN park_max_min USING(city,zoom));
 

@@ -32,7 +32,9 @@ CREATE TABLE sport_index_isochrones AS (
 		sport_max_min AS (
 			SELECT city,zoom,MAX(sport_index) AS max_sport_index, MIN(sport_index) AS min_sport_index FROM data_table GROUP BY 1,2
 		)
-	SELECT city,zoom,h3, CAST(100*(sport_index-min_sport_index)/(max_sport_index-min_sport_index) AS smallint) AS sport_index
+	SELECT
+		city,zoom,h3,
+		CASE WHEN max_sport_index>min_sport_index THEN CAST(100*(sport_index-min_sport_index)/(max_sport_index-min_sport_index) AS smallint) ELSE 100::smallint END AS sport_index
 	FROM data_table
 	JOIN sport_max_min USING(city,zoom));
 

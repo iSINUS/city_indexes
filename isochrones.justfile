@@ -41,11 +41,10 @@ prepare-indexes-isochrones-objects:
     psql $DATABASE_URL -a -q -f sql_indexes/390.sport.sql
     psql $DATABASE_URL -a -q -f sql_indexes/400.park.sql
     psql $DATABASE_URL -a -q -f sql_indexes/410.education.sql
-    psql $DATABASE_URL -a -q -f sql_indexes/999.city_indexes_isochrones.sql
 
 [group('process-isochrones')]
 prepare-indexes-isochrones-final:
-    psql $DATABASE_URL -a -q -f sql_indexes/999.city_indexes_full.sql
+    psql $DATABASE_URL -a -q -f sql_indexes/999.city_indexes_isochrones.sql
 
 [group('process-isochrones')]
 prepare-indexes-isochrones: valhalla prepare-indexes-isochrones-objects prepare-indexes-isochrones-final

@@ -32,7 +32,9 @@ CREATE TABLE kindergarten_index_isochrones AS (
 		kindergarten_max_min AS (
 			SELECT city,zoom,MAX(kindergarten_index) AS max_kindergarten_index, MIN(kindergarten_index) AS min_kindergarten_index FROM data_table GROUP BY 1,2
 		)
-	SELECT city,zoom,h3, CAST(100*(kindergarten_index-min_kindergarten_index)/(max_kindergarten_index-min_kindergarten_index) AS smallint) AS kindergarten_index
+	SELECT
+		city,zoom,h3,
+		CASE WHEN max_kindergarten_index>min_kindergarten_index THEN CAST(100*(kindergarten_index-min_kindergarten_index)/(max_kindergarten_index-min_kindergarten_index) AS smallint) ELSE 100::smallint END AS kindergarten_index
 	FROM data_table
 	JOIN kindergarten_max_min USING(city,zoom));
 

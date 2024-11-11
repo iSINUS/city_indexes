@@ -32,7 +32,9 @@ CREATE TABLE transport_index_isochrones AS (
 		transport_max_min AS (
 			SELECT city,zoom,MAX(transport_index) AS max_transport_index, MIN(transport_index) AS min_transport_index FROM data_table GROUP BY 1,2
 		)
-	SELECT city,zoom,h3, CAST(100*(transport_index-min_transport_index)/(max_transport_index-min_transport_index) AS smallint) AS transport_index
+	SELECT
+		city,zoom,h3,
+		CASE WHEN max_transport_index>min_transport_index THEN CAST(100*(transport_index-min_transport_index)/(max_transport_index-min_transport_index) AS smallint) ELSE 100::smallint END AS transport_index
 	FROM data_table
 	JOIN transport_max_min USING(city,zoom));
 

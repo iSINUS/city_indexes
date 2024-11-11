@@ -32,7 +32,9 @@ CREATE TABLE education_index_isochrones AS (
 		education_max_min AS (
 			SELECT city,zoom,MAX(education_index) AS max_education_index, MIN(education_index) AS min_education_index FROM data_table GROUP BY 1,2
 		)
-	SELECT city,zoom,h3, CAST(100*(education_index-min_education_index)/(max_education_index-min_education_index) AS smallint) AS education_index
+	SELECT
+		city,zoom,h3,
+		CASE WHEN max_education_index>min_education_index THEN CAST(100*(education_index-min_education_index)/(max_education_index-min_education_index) AS smallint) ELSE 100::smallint END AS education_index
 	FROM data_table
 	JOIN education_max_min USING(city,zoom));
 

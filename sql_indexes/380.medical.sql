@@ -32,7 +32,9 @@ CREATE TABLE medical_index_isochrones AS (
 		medical_max_min AS (
 			SELECT city,zoom,MAX(medical_index) AS max_medical_index, MIN(medical_index) AS min_medical_index FROM data_table GROUP BY 1,2
 		)
-	SELECT city,zoom,h3, CAST(100*(medical_index-min_medical_index)/(max_medical_index-min_medical_index) AS smallint) AS medical_index
+	SELECT
+		city,zoom,h3,
+		CASE WHEN max_medical_index>min_medical_index THEN CAST(100*(medical_index-min_medical_index)/(max_medical_index-min_medical_index) AS smallint) ELSE 100::smallint END AS medical_index
 	FROM data_table
 	JOIN medical_max_min USING(city,zoom));
 
