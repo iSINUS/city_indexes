@@ -38,7 +38,9 @@ def main():
     df = df.explode("h3_10s")
     df = df[~df["h3_10s"].isnull()]
     df["h3_geometry"] = df["h3_10s"].parallel_map(lambda x: Polygon(tuple(coord[::-1] for coord in h3.h3_to_geo_boundary(x))))
-    df["coverage"] = df.parallel_apply(lambda row: area(intersection(row["original_geometry"], row["h3_geometry"])) / row["area"], axis=1)
+    df["coverage"] = df.parallel_apply(
+        lambda row: area(intersection(row["original_geometry"], row["h3_geometry"])) / max(1, row["area"]), axis=1
+    )
     df = df.reset_index()
     df = df.loc[df.groupby(["area_id"])["coverage"].idxmax()]
     df["building_levels"] = df["building_levels"].fillna(1).astype(int)

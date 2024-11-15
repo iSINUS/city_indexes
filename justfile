@@ -24,17 +24,19 @@ prepare-all: download-osm extract-cities load-pbf fill-cities prepare-indexes pr
 
 [group('deploy')]
 export-city-indexes:
-    psql $DATABASE_URL --command "\\copy public.city_indexes (city, building, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index, geom, centroid) TO 'db/city_indexes.bin' ;"
-    psql $DATABASE_URL --command "\\copy public.city_indexes_full (city, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index, geom, centroid) TO 'db/city_indexes_full.bin' ;"
-    psql $DATABASE_URL --command "\\copy public.city_indexes_isochrones (city, building, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index, geom, centroid) TO 'db/city_indexes_isochrones.bin' ;"
+    mkdir -p db/$(date --date='-1 month' +%Y.%m)
+    cp db/*.bin db/$(date --date='-1 month' +%Y.%m)
+    psql $DATABASE_URL --command "\\copy public.city_indexes (city, building, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index,industrial_index,shop_food_index,shop_nonfood_index, geom, centroid) TO 'db/city_indexes.bin' ;"
+    psql $DATABASE_URL --command "\\copy public.city_indexes_full (city, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index,industrial_index,shop_food_index,shop_nonfood_index, geom, centroid) TO 'db/city_indexes_full.bin' ;"
+    psql $DATABASE_URL --command "\\copy public.city_indexes_isochrones (city, building, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index,industrial_index,shop_food_index,shop_nonfood_index, geom, centroid) TO 'db/city_indexes_isochrones.bin' ;"
 
 
 [group('deploy')]
 deploy-city-indexes location="LOCALSERVER": export-city-indexes
     psql $DATABASE_URL_{{ location }} -a -q -f sql_deploy/city_indexes_migrate.sql
-    psql $DATABASE_URL_{{ location }} --command "\\copy public.city_indexes (city, building, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index, geom, centroid) FROM 'db/city_indexes.bin' ;"
-    psql $DATABASE_URL_{{ location }} --command "\\copy public.city_indexes_full (city, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index, geom, centroid) FROM 'db/city_indexes_full.bin' ;"
-    psql $DATABASE_URL_{{ location }} --command "\\copy public.city_indexes_isochrones (city, building, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index, geom, centroid) FROM 'db/city_indexes_isochrones.bin' ;"
+    psql $DATABASE_URL_{{ location }} --command "\\copy public.city_indexes (city, building, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index,industrial_index,shop_food_index,shop_nonfood_index, geom, centroid) FROM 'db/city_indexes.bin' ;"
+    psql $DATABASE_URL_{{ location }} --command "\\copy public.city_indexes_full (city, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index,industrial_index,shop_food_index,shop_nonfood_index, geom, centroid) FROM 'db/city_indexes_full.bin' ;"
+    psql $DATABASE_URL_{{ location }} --command "\\copy public.city_indexes_isochrones (city, building, zoom, h3, living_index, kindergarten_index, school_index, transport_index, dining_index, parking_index, medical_index,sport_index,park_index,education_index,industrial_index,shop_food_index,shop_nonfood_index, geom, centroid) FROM 'db/city_indexes_isochrones.bin' ;"
     psql $DATABASE_URL_{{ location }} --command "VACUUM ANALYZE public.city_indexes;"
     psql $DATABASE_URL_{{ location }} --command "VACUUM ANALYZE public.city_indexes_full;"
     psql $DATABASE_URL_{{ location }} --command "VACUUM ANALYZE public.city_indexes_isochrones;"
