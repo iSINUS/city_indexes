@@ -12,6 +12,9 @@ CREATE TABLE city_indexes_full AS (
 		CAST(COALESCE(sport_index,0) AS smallint) AS sport_index,
 		CAST(COALESCE(park_index,0) AS smallint) AS park_index,
 		CAST(COALESCE(education_index,0) AS smallint) AS education_index,
+		CAST(COALESCE(industrial_index,0) AS smallint) AS industrial_index,
+		CAST(COALESCE(shop_food_index,0) AS smallint) AS shop_food_index,
+		CAST(COALESCE(shop_nonfood_index,0) AS smallint) AS shop_nonfood_index,
 		h3_cell_to_boundary_geometry(h3) AS geom,
 		h3_cell_to_geometry(h3) AS centroid
 	FROM living_index
@@ -23,7 +26,10 @@ CREATE TABLE city_indexes_full AS (
 	FULL JOIN medical_index_full USING (city,h3,zoom)
 	FULL JOIN sport_index_full USING (city,h3,zoom)
 	FULL JOIN park_index_full USING (city,h3,zoom)
-	FULL JOIN education_index_full USING (city,h3,zoom));
+	FULL JOIN education_index_full USING (city,h3,zoom)
+	FULL JOIN industrial_index_full USING (city,h3,zoom)
+	FULL JOIN shop_food_index_full USING (city,h3,zoom)
+	FULL JOIN shop_nonfood_index_full USING (city,h3,zoom));
 
 CREATE INDEX city_indexes_full_geom_idx
   ON city_indexes_full

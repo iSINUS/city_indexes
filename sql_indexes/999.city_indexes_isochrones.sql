@@ -12,6 +12,9 @@ CREATE TABLE city_indexes_isochrones AS (
 		CAST(COALESCE(sport_index,0) AS smallint) AS sport_index,
 		CAST(COALESCE(park_index,0) AS smallint) AS park_index,
 		CAST(COALESCE(education_index,0) AS smallint) AS education_index,
+		CAST(COALESCE(industrial_index,0) AS smallint) AS industrial_index,
+		CAST(COALESCE(shop_food_index,0) AS smallint) AS shop_food_index,
+		CAST(COALESCE(shop_nonfood_index,0) AS smallint) AS shop_nonfood_index,
 		h3_cell_to_boundary_geometry(h3) AS geom,
 		h3_cell_to_geometry(h3) AS centroid
 	FROM living_index
@@ -23,7 +26,10 @@ CREATE TABLE city_indexes_isochrones AS (
 	FULL JOIN medical_index_isochrones USING (city,h3)
 	FULL JOIN sport_index_isochrones USING (city,h3)
 	FULL JOIN park_index_isochrones USING (city,h3)
-	FULL JOIN education_index_isochrones USING (city,h3))
+	FULL JOIN education_index_isochrones USING (city,h3)
+	FULL JOIN industrial_index_isochrones USING (city,h3)
+	FULL JOIN shop_food_index_isochrones USING (city,h3)
+	FULL JOIN shop_nonfood_index_isochrones USING (city,h3))
 	UNION ALL
 	(SELECT
 		city,building, living_index_building.zoom,h3,
@@ -37,6 +43,9 @@ CREATE TABLE city_indexes_isochrones AS (
 		CAST(COALESCE(sport_index,0) AS smallint) AS sport_index,
 		CAST(COALESCE(park_index,0) AS smallint) AS park_index,
 		CAST(COALESCE(education_index,0) AS smallint) AS education_index,
+		CAST(COALESCE(industrial_index,0) AS smallint) AS industrial_index,
+		CAST(COALESCE(shop_food_index,0) AS smallint) AS shop_food_index,
+		CAST(COALESCE(shop_nonfood_index,0) AS smallint) AS shop_nonfood_index,
 		h3_cell_to_boundary_geometry(h3) AS geom,
 		h3_cell_to_geometry(h3) AS centroid
 	FROM living_index_building
@@ -48,7 +57,10 @@ CREATE TABLE city_indexes_isochrones AS (
 	FULL JOIN medical_index_isochrones USING (city,h3)
 	FULL JOIN sport_index_isochrones USING (city,h3)
 	FULL JOIN park_index_isochrones USING (city,h3)
-	FULL JOIN education_index_isochrones USING (city,h3)));
+	FULL JOIN education_index_isochrones USING (city,h3)
+	FULL JOIN industrial_index_isochrones USING (city,h3)
+	FULL JOIN shop_food_index_isochrones USING (city,h3)
+	FULL JOIN shop_nonfood_index_isochrones USING (city,h3)));
 
 CREATE INDEX city_indexes_isochrones_geom_idx
   ON city_indexes_isochrones

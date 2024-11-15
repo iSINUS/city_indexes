@@ -15,6 +15,7 @@ tables.points = osm2pgsql.define_node_table('points', {
     { column = 'amenity', type = 'text' },
     { column = 'subway', type = 'text' },
     { column = 'leisure', type = 'text' },
+    { column = 'shop',  type = 'text' },
     { column = 'geom', type = 'point', projection = srid, not_null = true },
 })
 
@@ -33,6 +34,7 @@ tables.polygons = osm2pgsql.define_area_table('polygons', {
     { column = 'landuse',     type = 'text' },
     { column = 'leisure', type = 'text' },
     { column = 'natural', type = 'text' },
+    { column = 'shop',  type = 'text' },
     { column = 'area', type = 'int' },
     { column = 'geom', type = 'geometry', projection = srid, not_null = true },
 })
@@ -187,7 +189,7 @@ local delete_keys = {
     'mml:class'
 }
 
-local amenity_like = {'amenity','shop','power'}
+local amenity_like = {'amenity','power'}
 
 -- The osm2pgsql.make_clean_tags_func() function takes the list of keys
 -- and key prefixes defined above and returns a function that can be used
@@ -245,6 +247,7 @@ function osm2pgsql.process_node(object)
         amenity = object:grab_tag('amenity'),
         subway = object:grab_tag('subway'),
         leisure = object:grab_tag('leisure'),
+        shop = object:grab_tag('shop'),
         geom = object:as_point()
     })
 end
@@ -258,7 +261,7 @@ function osm2pgsql.process_way(object)
         local geom = object:as_polygon()
         local amenity = object:grab_tag('amenity')
         local i = 1
-        while (not amenity) and (i<4)
+        while (not amenity) and (i<#amenity_like+1)
         do
             amenity = object:grab_tag(amenity_like[i])
             i = i + 1
@@ -273,6 +276,7 @@ function osm2pgsql.process_way(object)
             landuse = object:grab_tag('landuse'),
             leisure = object:grab_tag('leisure'),
             natural = object:grab_tag('natural'),
+            shop = object:grab_tag('shop'),
             area = math.floor(geom:transform(srid):area()),
             geom = geom
         })
@@ -320,7 +324,7 @@ function osm2pgsql.process_relation(object)
         local geom = object:as_multipolygon()
         local amenity = object:grab_tag('amenity')
         local i = 1
-        while (not amenity) and (i<4)
+        while (not amenity) and (i<#amenity_like+1)
         do
             amenity = object:grab_tag(amenity_like[i])
             i = i + 1
@@ -335,6 +339,7 @@ function osm2pgsql.process_relation(object)
             landuse = object:grab_tag('landuse'),
             leisure = object:grab_tag('leisure'),
             natural = object:grab_tag('natural'),
+            shop = object:grab_tag('shop'),
             area = math.floor(geom:transform(srid):area()),
             geom = geom
         })

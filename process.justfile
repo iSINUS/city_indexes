@@ -22,7 +22,7 @@ extract-cities filename="cities":
         city=($line)
         echo $city
         curl -s -o osm-data/${city[0]}.poly "https://polygons.openstreetmap.fr/get_poly.py?id=${city[0]}&params=0"
-        osmium extract --polygon osm-data/${city[0]}.poly --output=osm-data/${city[0]}.pbf --strategy=smart --overwrite osm-data/${city[2]}-latest.osm.pbf
+        osmium extract --polygon osm-data/${city[0]}.poly --output=osm-data/${city[0]}.pbf --strategy=smart -S types=any --overwrite osm-data/${city[2]}-latest.osm.pbf
     done
     rm osm-data/*.poly
 
@@ -105,8 +105,25 @@ prepare-indexes-education:
     psql $DATABASE_URL -a -q -f sql_indexes/111.education.sql
 
 [group('process')]
+prepare-indexes-area:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    cat sql_indexes/indexes_area | while read line || [[ -n $line ]];
+    do
+        index_var=($line)
+        psql $DATABASE_URL -a -q -f sql_indexes/120.${index_var[0]}.sql
+        psql $DATABASE_URL --command "\\copy public.objects_tmp (area_id, area, geometry) TO 'data/objects_tmp.csv' DELIMITER ',' CSV HEADER QUOTE '\"' ESCAPE '\"';"
+        python utils/objects_to_h3.py
+        psql $DATABASE_URL --command "\\copy public.objects_tmp_h3 (area_id, area, h3_10) FROM 'data/objects_tmp_h3.csv' DELIMITER ',' CSV QUOTE '\"' ESCAPE '\"';"
+        SQL_INDEX_NAME=${index_var[0]} SQL_INDEX_RADIUS=${index_var[1]} envsubst < sql_indexes/template.index_area_001.sql > sql_indexes/${index_var[0]}_001.tmp.sql
+        psql $DATABASE_URL -a -q -f sql_indexes/${index_var[0]}_001.tmp.sql
+    done
+    rm sql_indexes/*.tmp.sql
+
+[group('process')]
 prepare-indexes-final:
     psql $DATABASE_URL -a -q -f sql_indexes/999.city_indexes.sql
 
 [group('process')]
-prepare-indexes: prepare-indexes-functions prepare-indexes-apartments prepare-indexes-objects prepare-indexes-parks prepare-indexes-education prepare-indexes-final
+prepare-indexes: prepare-indexes-functions prepare-indexes-apartments prepare-indexes-objects prepare-indexes-parks prepare-indexes-education prepare-indexes-area prepare-indexes-final

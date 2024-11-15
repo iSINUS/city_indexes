@@ -9,7 +9,7 @@ CREATE TABLE park_index_isochrones AS (
 			WHERE b.h3_10 IS NOT NULL AND b.city IS NOT NULL AND a.zoom=10 AND aa.distance<=30
 			GROUP BY 1,2,3,4),
 		park_index_10 AS (
-			SELECT city,h3,10::SMALLINT AS zoom, SUM(area*POWEr((31-distance),2)) AS park_index
+			SELECT city,h3,10::SMALLINT AS zoom, SUM(area*POWER((31-distance),2)) AS park_index
 			FROM park_prepared
 			GROUP BY 1,2),
 		park_index_9 AS (

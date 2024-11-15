@@ -41,6 +41,9 @@ prepare-indexes-isochrones-objects:
     psql $DATABASE_URL -a -q -f sql_indexes/390.sport.sql
     psql $DATABASE_URL -a -q -f sql_indexes/400.park.sql
     psql $DATABASE_URL -a -q -f sql_indexes/410.education.sql
+    psql $DATABASE_URL -a -q -f sql_indexes/420.industrial.sql
+    psql $DATABASE_URL -a -q -f sql_indexes/430.shop_food.sql
+    psql $DATABASE_URL -a -q -f sql_indexes/440.shop_nonfood.sql
 
 [group('process-isochrones')]
 prepare-indexes-isochrones-final:

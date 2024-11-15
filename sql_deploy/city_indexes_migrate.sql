@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS city_indexes
     sport_index smallint,
     park_index smallint,
     education_index smallint,
+    industrial_index smallint,
+    shop_food_index smallint,
+    shop_nonfood_index smallint,
     geom geometry,
     centroid geometry
 );
@@ -54,8 +57,11 @@ BEGIN
     SELECT
       public.ST_AsMVTGeom(
           public.ST_Transform(public.ST_CurveToLine(geom), 3857),
-          public.ST_TileEnvelope(z, x, y),
-          4096, 64, true) AS geom, city_index, living_index, kindergarten_index, school_index, transport_index, parking_index, dining_index, medical_index,sport_index,park_index,education_index
+          public.ST_TileEnvelope(z, x, y), 4096, 64, true) AS geom,
+          city_index, living_index, kindergarten_index, school_index,
+          transport_index, parking_index, dining_index, medical_index,
+          sport_index, park_index, education_index,
+          industrial_index, shop_food_index, shop_nonfood_index
     FROM (
 		WITH
 			city_index AS (
@@ -70,7 +76,10 @@ BEGIN
 					medical_index*LEAST(GREATEST(convert_to_int(query_params->>'medical_index_importance'),-5),5) +
 					sport_index*LEAST(GREATEST(convert_to_int(query_params->>'sport_index_importance'),-5),5) +
 					park_index*LEAST(GREATEST(convert_to_int(query_params->>'park_index_importance'),-5),5) +
-					education_index*LEAST(GREATEST(convert_to_int(query_params->>'education_index_importance'),-5),5) AS city_index
+					education_index*LEAST(GREATEST(convert_to_int(query_params->>'education_index_importance'),-5),5) +
+          (100-industrial_index)*LEAST(GREATEST(convert_to_int(query_params->>'industrial_index_importance'),-5),5) +
+          shop_food_index*LEAST(GREATEST(convert_to_int(query_params->>'shop_food_index_importance'),-5),5) +
+          shop_nonfood_index*LEAST(GREATEST(convert_to_int(query_params->>'shop_nonfood_index_importance'),-5),5) AS city_index
 				FROM city_indexes
 				WHERE
 					((query_params->>'bbox' IS NULL) OR public.ST_Within(centroid,public.ST_Transform(public.ST_GeomFromGeoJSON(query_params->>'bbox'),4326))) AND
@@ -78,7 +87,9 @@ BEGIN
 			index_max_min AS (
 			  SELECT *, MAX(city_index) OVER() AS max_city_index, MIN(city_index) OVER() AS min_city_index FROM city_index)
 		SELECT
-			h3,(100-living_index) AS living_index, kindergarten_index, school_index, transport_index, parking_index, dining_index, medical_index,sport_index,park_index,education_index,
+			h3,(100-living_index) AS living_index, kindergarten_index, school_index,
+      transport_index, parking_index, dining_index, medical_index, sport_index,
+      park_index, education_index, (100-industrial_index) AS industrial_index, shop_food_index, shop_nonfood_index,
 			CASE WHEN max_city_index>min_city_index THEN CAST(ROUND(100*(city_index-min_city_index)/(max_city_index-min_city_index)) AS smallint) ELSE 100::smallint END AS city_index,
 			geom
 		FROM index_max_min
@@ -107,6 +118,9 @@ CREATE TABLE IF NOT EXISTS city_indexes_full
     sport_index smallint,
     park_index smallint,
     education_index smallint,
+    industrial_index smallint,
+    shop_food_index smallint,
+    shop_nonfood_index smallint,
     geom geometry,
     centroid geometry
 );
@@ -130,8 +144,11 @@ BEGIN
     SELECT
       public.ST_AsMVTGeom(
           public.ST_Transform(public.ST_CurveToLine(geom), 3857),
-          public.ST_TileEnvelope(z, x, y),
-          4096, 64, true) AS geom, city_index, living_index, kindergarten_index, school_index, transport_index, parking_index, dining_index, medical_index,sport_index,park_index,education_index
+          public.ST_TileEnvelope(z, x, y), 4096, 64, true) AS geom,
+          city_index, living_index, kindergarten_index, school_index,
+          transport_index, parking_index, dining_index, medical_index,
+          sport_index,park_index,education_index,
+          industrial_index, shop_food_index, shop_nonfood_index
     FROM (
 		WITH
 			city_index AS (
@@ -146,7 +163,10 @@ BEGIN
 					medical_index*LEAST(GREATEST(convert_to_int(query_params->>'medical_index_importance'),-5),5) +
 					sport_index*LEAST(GREATEST(convert_to_int(query_params->>'sport_index_importance'),-5),5) +
 					park_index*LEAST(GREATEST(convert_to_int(query_params->>'park_index_importance'),-5),5) +
-					education_index*LEAST(GREATEST(convert_to_int(query_params->>'education_index_importance'),-5),5) AS city_index
+					education_index*LEAST(GREATEST(convert_to_int(query_params->>'education_index_importance'),-5),5) +
+          (100-industrial_index)*LEAST(GREATEST(convert_to_int(query_params->>'industrial_index_importance'),-5),5) +
+          shop_food_index*LEAST(GREATEST(convert_to_int(query_params->>'shop_food_index_importance'),-5),5) +
+          shop_nonfood_index*LEAST(GREATEST(convert_to_int(query_params->>'shop_nonfood_index_importance'),-5),5) AS city_index
 				FROM city_indexes_full
 				WHERE
 					((query_params->>'bbox' IS NULL) OR public.ST_Within(centroid,public.ST_Transform(public.ST_GeomFromGeoJSON(query_params->>'bbox'),4326))) AND
@@ -154,7 +174,9 @@ BEGIN
 			index_max_min AS (
 			  SELECT *, MAX(city_index) OVER() AS max_city_index, MIN(city_index) OVER() AS min_city_index FROM city_index)
 		SELECT
-			h3,(100-living_index) AS living_index, kindergarten_index, school_index, transport_index, parking_index, dining_index, medical_index,sport_index,park_index,education_index,
+			h3,(100-living_index) AS living_index, kindergarten_index, school_index,
+      transport_index, parking_index, dining_index, medical_index,sport_index,
+      park_index,education_index, (100-industrial_index) AS industrial_index, shop_food_index, shop_nonfood_index,
 			CASE WHEN max_city_index>min_city_index THEN CAST(ROUND(100*(city_index-min_city_index)/(max_city_index-min_city_index)) AS smallint) ELSE 100::smallint END AS city_index,
 			geom
 		FROM index_max_min
@@ -184,6 +206,9 @@ CREATE TABLE IF NOT EXISTS city_indexes_isochrones
     sport_index smallint,
     park_index smallint,
     education_index smallint,
+    industrial_index smallint,
+    shop_food_index smallint,
+    shop_nonfood_index smallint,
     geom geometry,
     centroid geometry
 );
@@ -207,8 +232,11 @@ BEGIN
     SELECT
       public.ST_AsMVTGeom(
           public.ST_Transform(public.ST_CurveToLine(geom), 3857),
-          public.ST_TileEnvelope(z, x, y),
-          4096, 64, true) AS geom, city_index, living_index, kindergarten_index, school_index, transport_index, parking_index, dining_index, medical_index,sport_index,park_index,education_index
+          public.ST_TileEnvelope(z, x, y), 4096, 64, true) AS geom,
+          city_index, living_index, kindergarten_index, school_index,
+          transport_index, parking_index, dining_index, medical_index,
+          sport_index,park_index,education_index,
+          industrial_index, shop_food_index, shop_nonfood_index
     FROM (
 		WITH
 			city_index AS (
@@ -223,7 +251,10 @@ BEGIN
 					medical_index*LEAST(GREATEST(convert_to_int(query_params->>'medical_index_importance'),-5),5) +
 					sport_index*LEAST(GREATEST(convert_to_int(query_params->>'sport_index_importance'),-5),5) +
 					park_index*LEAST(GREATEST(convert_to_int(query_params->>'park_index_importance'),-5),5) +
-					education_index*LEAST(GREATEST(convert_to_int(query_params->>'education_index_importance'),-5),5) AS city_index
+					education_index*LEAST(GREATEST(convert_to_int(query_params->>'education_index_importance'),-5),5) +
+          (100-industrial_index)*LEAST(GREATEST(convert_to_int(query_params->>'industrial_index_importance'),-5),5) +
+          shop_food_index*LEAST(GREATEST(convert_to_int(query_params->>'shop_food_index_importance'),-5),5) +
+          shop_nonfood_index*LEAST(GREATEST(convert_to_int(query_params->>'shop_nonfood_index_importance'),-5),5) AS city_index
 				FROM city_indexes_isochrones
 				WHERE
 					((query_params->>'bbox' IS NULL) OR public.ST_Within(centroid,public.ST_Transform(public.ST_GeomFromGeoJSON(query_params->>'bbox'),4326))) AND
@@ -231,7 +262,9 @@ BEGIN
 			index_max_min AS (
 			  SELECT *, MAX(city_index) OVER() AS max_city_index, MIN(city_index) OVER() AS min_city_index FROM city_index)
 		SELECT
-			h3,(100-living_index) AS living_index, kindergarten_index, school_index, transport_index, parking_index, dining_index, medical_index,sport_index,park_index,education_index,
+			h3,(100-living_index) AS living_index, kindergarten_index, school_index,
+      transport_index, parking_index, dining_index, medical_index,sport_index,
+      park_index,education_index, (100-industrial_index) AS industrial_index, shop_food_index, shop_nonfood_index,
 			CASE WHEN max_city_index>min_city_index THEN CAST(ROUND(100*(city_index-min_city_index)/(max_city_index-min_city_index)) AS smallint) ELSE 100::smallint END AS city_index,
 			geom
 		FROM index_max_min
