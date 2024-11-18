@@ -299,7 +299,6 @@ function setCity(feature) {
 		updateCity();
 	}
 }
-1;
 function updateCity(e) {
 	// Switch source and fly on teh pam to selected city
 	indexParameters.set("city", document.getElementById("city").value);
