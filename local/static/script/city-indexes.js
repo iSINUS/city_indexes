@@ -266,6 +266,24 @@ function updateDefaultParameters() {
 	}
 	updateParameters();
 }
+function flyToCity(bbox_center, isfly) {
+	let findCity = "";
+	let minDistance = 1000000000;
+	// Find closest by distance
+	for (city of cities) {
+		const distance = bbox_center.distanceTo(
+			new maplibregl.LngLat(city.coordinates[0], city.coordinates[1]),
+		);
+		if (distance < minDistance) {
+			minDistance = distance;
+			findCity = city.name_en;
+		}
+	}
+	if (findCity !== document.getElementById("city").value) {
+		document.getElementById("city").value = findCity;
+		updateCity(isfly);
+	}
+}
 function setCity(feature) {
 	let bbox_center;
 	// Find city for search result
@@ -282,30 +300,17 @@ function setCity(feature) {
 		// From map
 		bbox_center = feature;
 	}
-	let findCity = "";
-	let minDistance = 1000000000;
-	// Find closest by distance
-	for (city of cities) {
-		const distance = bbox_center.distanceTo(
-			new maplibregl.LngLat(city.coordinates[0], city.coordinates[1]),
-		);
-		if (distance < minDistance) {
-			minDistance = distance;
-			findCity = city.name_en;
-		}
-	}
-	if (findCity !== document.getElementById("city").value) {
-		document.getElementById("city").value = findCity;
-		updateCity();
-	}
+	flyToCity(bbox_center);
 }
-function updateCity(e) {
-	// Switch source and fly on teh pam to selected city
+function updateCity(isfly) {
+	// Switch source and fly on the map to selected city
 	indexParameters.set("city", document.getElementById("city").value);
-	map.flyTo({
-		center: citiesMapping.get(indexParameters.get("city")),
-		essential: true,
-	});
+	if (isfly) {
+		map.flyTo({
+			center: citiesMapping.get(indexParameters.get("city")),
+			essential: true,
+		});
+	}
 	reloadCityIndex(indexParameters);
 }
 function updateValues(values) {

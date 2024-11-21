@@ -27,6 +27,21 @@ extract-cities filename="cities":
     rm osm-data/*.poly
 
 [group('process')]
+merge-cities filename="cities":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo "osmium merge" > citylist
+    cat utils/{{ filename }} | while read line || [[ -n $line ]];
+    do
+        city=($line)
+        echo " osm-data/${city[0]}.pbf " >> citylist
+    done
+    echo "-O -o osm-data/data.pbf" >> citylist
+    eval $(cat citylist)
+    rm citylist
+
+[group('process')]
 load-pbf:
     #!/usr/bin/env bash
     set -euo pipefail

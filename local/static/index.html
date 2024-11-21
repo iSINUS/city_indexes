@@ -19,8 +19,9 @@
     <script src='https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.js'></script>
     <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.css' />
 
-    <script src="https://unpkg.com/@stadiamaps/maplibre-search-box@1.0.1/dist/maplibre-search-box.umd.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@stadiamaps/maplibre-search-box@1.0.1/dist/style.css" />
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.7.0/dist/maplibre-gl-geocoder.js"></script>
+    <link rel="stylesheet"
+        href="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.7.0/dist/maplibre-gl-geocoder.css" />
 
     <script src="https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css" />
@@ -97,7 +98,7 @@
             <div class="parameters-text"><span>Город (отображение и нормализация)</span></div>
             <div class="parameters-values">
                 <p>
-                    <select id="city" onchange="updateCity()">
+                    <select id="city" onchange="updateCity(true)">
                     </select>
                 </p>
             </div>
@@ -134,11 +135,6 @@
         <div id="slider"></div>
     </div>
     <script>
-        // Create map search
-        var search_control = new maplibreSearchBox.MapLibreSearchControl({
-            useMapFocusPoint: true,
-            onResultSelected: setCity,
-        });
         MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
         MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
         MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
@@ -176,8 +172,57 @@
             attributionControl: { compact: true },
             hash: true,
         });
-        // Add map seaarch
-        map.addControl(search_control, "top-right");
+        // Add map search
+        const geocoderApi = {
+            forwardGeocode: async (config) => {
+                const features = [];
+                try {
+                    const request =
+                        `https://city-indexes.online/search?q=${config.query
+                        }&format=geojson&polygon_geojson=1&addressdetails=1`;
+                    const response = await fetch(request);
+                    const geojson = await response.json();
+                    for (const feature of geojson.features) {
+                        const center = [
+                            feature.bbox[0] +
+                            (feature.bbox[2] - feature.bbox[0]) / 2,
+                            feature.bbox[1] +
+                            (feature.bbox[3] - feature.bbox[1]) / 2
+                        ];
+                        const point = {
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: center
+                            },
+                            place_name: feature.properties.display_name,
+                            properties: feature.properties,
+                            text: feature.properties.display_name,
+                            place_type: ['place'],
+                            center
+                        };
+                        features.push(point);
+                    }
+                } catch (e) {
+                    console.error(`Failed to forwardGeocode with error: ${e}`);
+                }
+
+                return {
+                    features
+                };
+            }
+        };
+        map.addControl(
+            new MaplibreGeocoder(geocoderApi, {
+                enableEventLogging: false,
+                language: "ru",
+                placeholder: "Поиск по адресу ...",
+                minLength: 5,
+                showResultsWhileTyping: true,
+                zoom: 14,
+                maplibregl
+            }), "top-right"
+        );
 
         // Add draw polygon control
         const draw = new MapboxDraw({
@@ -209,6 +254,9 @@
             createInputs();
             updateParameters();
             setCity(map.getCenter());
+        });
+        map.on('moveend', () => {
+            flyToCity(map.getCenter(), false);
         });
 
         // Create a popup, but don't add it to the map yet.

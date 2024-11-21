@@ -20,7 +20,7 @@ build-postgis-h3:
 pg-hero location="LOCAL":
     echo $DATABASE_URL_{{ location }}_ADMIN && docker run --rm -ti -e DATABASE_URL=$DATABASE_URL_{{ location }}_ADMIN -p 8080:8080 --network=host ankane/pghero
 
-prepare-all: download-osm extract-cities load-pbf fill-cities prepare-indexes prepare-indexes-full prepare-indexes-isochrones
+prepare-all: download-osm extract-cities merge-cities load-pbf fill-cities prepare-indexes prepare-indexes-full prepare-indexes-isochrones
 
 [group('deploy')]
 export-city-indexes:
@@ -41,6 +41,7 @@ deploy-city-indexes location="LOCALSERVER": export-city-indexes
     psql $DATABASE_URL_{{ location }} --command "VACUUM ANALYZE public.city_indexes_full;"
     psql $DATABASE_URL_{{ location }} --command "VACUUM ANALYZE public.city_indexes_isochrones;"
     psql $DATABASE_URL_{{ location }} --command "VACUUM ANALYZE public.spatial_ref_sys;"
+    # cp osm-data/data.pbf local-server/nominatim/osm_data/data.pbf
 
 [group('deploy')]
 deploy-site:

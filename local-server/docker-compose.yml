@@ -39,3 +39,18 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     shm_size: 1gb
+
+  nominatim:
+    image: mediagis/nominatim:4.5
+    env_file:
+      - .env
+    environment:
+      # see https://github.com/mediagis/nominatim-docker/tree/master/4.5#configuration for more options
+      PBF_PATH: /nominatim/data/data.pbf
+      UPDATE_MODE: none
+      THREADS: 8
+    volumes:
+      - ./nominatim/osm_data:/nominatim/data
+      - ./nominatim/data:/var/lib/postgresql/16/main
+      - ./nominatim/flatnode:/nominatim/flatnode
+    shm_size: 1gb
