@@ -179,7 +179,7 @@
                 try {
                     const request =
                         `https://city-indexes.online/search?q=${config.query
-                        }&format=geojson&polygon_geojson=1&addressdetails=1`;
+                        }&format=geojson&polygon_geojson=1&addressdetails=1&layer=address`;
                     const response = await fetch(request);
                     const geojson = await response.json();
                     for (const feature of geojson.features) {
