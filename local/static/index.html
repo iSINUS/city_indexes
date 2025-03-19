@@ -258,6 +258,10 @@
         map.on('moveend', () => {
             flyToCity(map.getCenter(), false);
         });
+        let generatedMap = '';
+        map.on('render', 'city-districts-data', () => {
+            generatedMap = map.getCanvas().toDataURL("image/png");
+        });
 
         // Create a popup, but don't add it to the map yet.
         const popup = new maplibregl.Popup({ closeOnClick: true, maxWidth: '400px' });

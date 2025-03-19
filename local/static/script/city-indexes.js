@@ -140,7 +140,11 @@ fetch("script/cities.json")
 		console.log(cities);
 	});
 
+const queryParams = new URLSearchParams(window.location.search);
 let tileName = "city_indexes";
+if (queryParams.get("tilename") != null) {
+	tileName = queryParams.get("tilename");
+}
 
 let indexParameters = new Map([["city", "Minsk", "building", "*"]]);
 let parametersDefaultMapping = new Map();
@@ -149,6 +153,7 @@ let citiesMapping = new Map();
 
 function createInputs() {
 	// Fill select options
+	document.getElementById("indexes").value = tileName;
 	for (city of cities) {
 		citiesMapping.set(city.name_en, city.coordinates);
 	}
@@ -169,7 +174,7 @@ function createInputs() {
 		parametersList
 			.map(
 				(parameter) =>
-					`<p><label for="${parameter.name}_importance" title="${parameter.title}">${parameter.label}:</label><input type="number" id="${parameter.name}_importance" min="-5" max="5" value="1"></p>`,
+					`<p><label for="${parameter.name}_importance" title="${parameter.title}">${parameter.label}:</label><input type="number" id="${parameter.name}_importance" min="-5" max="5" value="${queryParams.get(parameter.name + "_importance") || 1}"></p>`,
 			)
 			.join("");
 }
