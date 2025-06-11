@@ -3,7 +3,7 @@ services:
     image: nginx:alpine
     restart: unless-stopped
     ports:
-      - "443:443"
+      - "1443:80"
     env_file:
       - .env
     volumes:

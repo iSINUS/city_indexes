@@ -10,6 +10,10 @@ for i in `curl -s -L https://www.cloudflare.com/ips-v4`; do
         echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH;
 done
 
+echo "set_real_ip_from 172.18.0.1/32;" >> $CLOUDFLARE_FILE_PATH;
+echo "set_real_ip_from 172.20.0.1/32;" >> $CLOUDFLARE_FILE_PATH;
+echo "set_real_ip_from 172.22.0.1/32;" >> $CLOUDFLARE_FILE_PATH;
+
 echo "" >> $CLOUDFLARE_FILE_PATH;
 echo "# - IPv6" >> $CLOUDFLARE_FILE_PATH;
 for i in `curl -s -L https://www.cloudflare.com/ips-v6`; do
