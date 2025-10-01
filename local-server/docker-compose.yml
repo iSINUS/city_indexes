@@ -1,18 +1,35 @@
 services:
-  nginx:
-    image: nginx:alpine
+  # nginx:
+  #   image: nginx:alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "1443:80"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./certs:/etc/ssl/certs/private
+  #     - ./cache:/var/cache/nginx
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./cloudflare:/etc/nginx/cloudflare:ro
+  #     - ./nginx_logs:/var/log/nginx
+  #     - ./static:/usr/share/nginx/static
+  #   depends_on:
+  #     - tiles
+
+  angie:
+    image: docker.angie.software/angie:minimal
     restart: unless-stopped
     ports:
       - "1443:80"
     env_file:
       - .env
     volumes:
-      - ./certs:/etc/ssl/certs/private
-      - ./cache:/var/cache/nginx
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./cloudflare:/etc/nginx/cloudflare:ro
-      - ./nginx_logs:/var/log/nginx
-      - ./static:/usr/share/nginx/static
+      - ./angie_cache:/var/cache/angie
+      - ./angie.conf:/etc/angie/angie.conf:ro
+      - ./htpasswd:/etc/angie/htpasswd:ro
+      - ./angie_logs:/var/log/angie
+      - ./static:/usr/share/angie/html:ro
+      - ./cloudflare:/etc/angie/cloudflare:ro
     depends_on:
       - tiles
 

@@ -1,0 +1,16 @@
+/home/sivanov/Development/gitlab.com/city_indexes/local-server/angie_logs/*.log {
+  monthly
+  missingok
+  rotate 12
+  dateext
+  compress
+  delaycompress
+  notifempty
+  sharedscripts
+  postrotate
+    cd /home/sivanov/Development/gitlab.com/city_indexes/local-server/angie_logs \
+        && cp *log-* /home/sivanov/Development/gitlab.com/city_indexes/remote/angie_logs/ \
+        && rm *log-*
+    /usr/bin/docker restart local-server-angie-1
+  endscript
+}

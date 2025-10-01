@@ -6,8 +6,10 @@
 *.bin
 
 cache/
+angie_cache/
 certs/
 nginx_logs/
+angie_logs/
 postgresql_data/
 valhalla/
 
@@ -16,3 +18,5 @@ TODO.md
 local-server/static/
 local-server/logrotate.d/nginx
 flatnode.file
+
+htpasswd
